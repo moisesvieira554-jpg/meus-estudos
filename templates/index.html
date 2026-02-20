@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Revisão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #4f46e5; --success: #10b981; --danger: #ef4444; --bg: #f3f4f6; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
+        nav { width: 250px; background: #1e293b; color: white; padding: 20px; position: fixed; height: 100%; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+        main { margin-left: 250px; padding: 40px; width: 100%; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 700px; }
+        .nav-item { padding: 12px; cursor: pointer; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; background: #334155; text-align: center; }
+        .nav-item.active { background: var(--primary); font-weight: bold; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .input-group { display: flex; gap: 10px; }
+        input, select { flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; outline: none; }
+        .main-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
+        
+        /* Ícones V13 Estilizados */
+        .item-revisao { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 10px; background: #fff; }
+        .btn-group { display: flex; gap: 8px; }
+        .btn-icon { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-edit { background: #fef3c7; color: #92400e; }
+        .btn-delete { background: #fee2e2; color: #991b1b; }
+        .btn-check { background: var(--success); color: white; border-radius: 50%; width: 35px; height: 35px; }
+        
+        .data-revisao { font-size: 0.75rem; margin-top: 4px; display: block; font-weight: 600; }
+        .atrasado { color: var(--danger); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <nav>
+        <h2 style="font-size: 1rem; opacity: 0.7;">Sistema de Revisão</h2>
+        <div class="nav-item active" onclick="location.href='/dashboard'">Painel</div>
+        <div class="nav-item" onclick="location.href='/'">Sair</div>
+    </nav>
+    <main>
+        <div class="container">
+            <div class="card">
+                <h3>Novo Estudo</h3>
+                <div class="form-group">
+                    <input type="text" id="materia" placeholder="Matéria">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="subtopico" placeholder="Subtópico">
+                </div>
+                <div class="form-group">
+                    <select id="prazo">
+                        <option value="1">Amanhã</option>
+                        <option value="7">7 dias</option>
+                        <option value="30">30 dias</option>
+                    </select>
+                </div>
+                <button class="main-btn" onclick="salvarNoBanco()">Agendar Revisão</button>
+            </div>
+
+            <div id="lista-revisoes"></div>
+        </div>
+    </main>
+
+    <script>
+        // Ao carregar a página, busca os dados do servidor Python
+        async function carregarDados() {
+            const res = await fetch('/api/estudos');
+            const dados = await res.json();
+            const container = document.getElementById('lista-revisoes');
+            container.innerHTML = '';
+
+            dados.forEach(d => {
+                if(!d.feito) {
+                    container.innerHTML += `
+                        <div class="item-revisao">
+                            <div>
+                                <strong>${d.materia}</strong><br><small>${d.subtopico}</small>
+                                <span class="data-revisao">Revisar em: ${d.data}</span>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn-icon btn-delete" onclick="excluir(${d.id})">🗑️</button>
+                                <button class="btn-icon btn-check" onclick="concluir(${d.id})">✓</button>
+                            </div>
+                        </div>`;
+                }
+            });
+        }
+
+        async function salvarNoBanco() {
+            const materia = document.getElementById('materia').value;
+            const subtopico = document.getElementById('subtopico').value;
+            const dias = parseInt(document.getElementById('prazo').value);
+            
+            const dataAlvo = new Date();
+            dataAlvo.setDate(dataAlvo.getDate() + dias);
+            const dataStr = dataAlvo.toLocaleDateString('pt-BR');
+
+            await fetch('/api/estudos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ materia, subtopico, data: dataStr })
+            });
+            
+            location.reload();
+        }
+
+        async function concluir(id) {
+            await fetch(`/api/estudos/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ feito: true })
+            });
+            carregarDados();
+        }
+
+        async function excluir(id) {
+            if(confirm("Excluir revisão?")) {
+                await fetch(`/api/estudos/${id}`, { method: 'DELETE' });
+                carregarDados();
+            }
+        }
+
+        carregarDados();
+    </script>
+</body>
+</html>

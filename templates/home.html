@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boas-vindas | Sistema de Revisão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #4f46e5; --text: #1e293b; --bg: #f3f4f6; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            background: var(--bg);
+            color: var(--text);
+        }
+        .hero { 
+            text-align: center; 
+            padding: 40px; 
+            background: white; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; color: #1e293b; line-height: 1.1; }
+        p { font-size: 1.1rem; color: #64748b; margin-bottom: 35px; line-height: 1.5; }
+        .btn-entrar {
+            text-decoration: none;
+            background: var(--primary);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+        .btn-entrar:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
+            background: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div style="font-size: 3rem; margin-bottom: 20px;">📚</div>
+        <h1>Organize sua Aprovação.</h1>
+        <p>Sua plataforma de revisão espaçada inteligente. Controle suas matérias e nunca mais esqueça o que estudou.</p>
+        <a href="/dashboard" class="btn-entrar">Acessar meu Painel →</a>
+    </div>
+</body>
+</html>
