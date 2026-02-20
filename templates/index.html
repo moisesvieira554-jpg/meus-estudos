@@ -3,112 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestão de Estudos - Ponto 2</title>
+    <title>EstudoFlow - Sistema de Revisão</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f8fafc;
-            --sidebar: #1e293b;
+            --primary-light: #eef2ff;
+            --sidebar: #0f172a;
+            --bg: #f1f5f9;
+            --card: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --white: #ffffff;
-            --border: #e2e8f0;
             --success: #10b981;
             --danger: #ef4444;
+            --border: #e2e8f0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
 
-        /* SIDEBAR COMPLETA - RESTAURADA */
-        nav { width: 280px; background: var(--sidebar); color: white; display: flex; flex-direction: column; position: fixed; height: 100vh; padding: 24px; }
-        .nav-header { font-size: 1.5rem; font-weight: 800; margin-bottom: 40px; display: flex; align-items: center; gap: 12px; }
-        .nav-menu { flex: 1; }
+        /* --- SIDEBAR RESTAURADA (PONTO 2) --- */
+        nav { width: 280px; background: var(--sidebar); color: white; display: flex; flex-direction: column; position: fixed; height: 100vh; padding: 30px 20px; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; color: #fff; }
+        .nav-group { margin-bottom: 30px; }
+        .nav-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; margin-bottom: 15px; display: block; font-weight: 700; }
         .nav-item { 
-            padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; cursor: pointer; 
-            display: flex; align-items: center; gap: 12px; transition: 0.2s; opacity: 0.7; color: white; text-decoration: none;
+            padding: 12px 16px; border-radius: 12px; margin-bottom: 6px; cursor: pointer; 
+            display: flex; align-items: center; gap: 12px; transition: 0.2s; color: #94a3b8; text-decoration: none; font-weight: 500;
         }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); opacity: 1; }
-        .nav-item.active { border-left: 4px solid var(--primary); font-weight: 600; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-item.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
 
-        /* CONTEÚDO PRINCIPAL */
-        main { margin-left: 280px; padding: 40px; width: calc(100% - 280px); }
-        .header-section { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end; }
-        
-        /* GRID DE LAYOUT */
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 350px; gap: 32px; }
+        /* --- CONTEÚDO PRINCIPAL --- */
+        main { margin-left: 280px; padding: 40px; width: 100%; max-width: 1200px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+        .header h1 { font-size: 1.8rem; font-weight: 800; color: var(--sidebar); }
 
-        /* CARDS */
-        .card { background: var(--white); border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        /* --- GRID DE LAYOUT --- */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start; }
 
-        /* FORMULÁRIO */
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.95rem; }
-        .btn-primary { 
-            background: var(--primary); color: white; border: none; width: 100%; padding: 14px; 
-            border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        /* --- CARDS --- */
+        .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 20px; color: var(--sidebar); display: flex; align-items: center; gap: 8px; }
+
+        /* --- STATS / RELATÓRIOS --- */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .stat-card { padding: 20px; border-radius: 16px; background: var(--primary-light); text-align: center; border: 1px solid rgba(79, 70, 229, 0.1); }
+        .stat-num { display: block; font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+        .stat-desc { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+
+        /* --- FILTROS (RESTAURADOS) --- */
+        .filter-section { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-chip { 
+            padding: 8px 18px; border-radius: 100px; background: #fff; border: 1px solid var(--border); 
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s;
         }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .filter-chip.active { background: var(--sidebar); color: #fff; border-color: var(--sidebar); }
 
-        /* RELATÓRIOS / STATS */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .stat-box { padding: 16px; border-radius: 16px; background: var(--bg); text-align: center; }
-        .stat-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-
-        /* FILTROS */
-        .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
-        .filter-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.85rem; }
-        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        /* LISTA DE REVISÕES V13 */
-        .revisao-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 18px; border-radius: 16px; background: white; border: 1px solid var(--border); 
-            margin-bottom: 12px; transition: 0.2s;
+        /* --- LISTA DE REVISÕES V13 --- */
+        .rev-card { 
+            background: #fff; padding: 20px; border-radius: 18px; border: 1px solid var(--border); 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; transition: 0.2s;
         }
-        .revisao-item:hover { border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
-        .subject-tag { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; background: #eef2ff; color: var(--primary); margin-bottom: 4px; display: inline-block; }
-        .topic-name { font-weight: 700; font-size: 1rem; color: var(--text-main); display: block; }
-        .date-info { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+        .rev-card:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .subject-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; background: var(--primary-light); color: var(--primary); margin-bottom: 6px; display: inline-block; }
+        .topic-title { font-weight: 700; font-size: 1.05rem; display: block; color: var(--sidebar); }
+        .date-tag { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 5px; }
 
-        .btn-action { width: 40px; height: 40px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s; }
-        .btn-check { background: #dcfce7; color: #166534; }
-        .btn-check:hover { background: var(--success); color: white; }
-        .btn-delete { background: #fee2e2; color: #991b1b; }
-        .btn-delete:hover { background: var(--danger); color: white; }
+        /* --- BOTÕES DE AÇÃO --- */
+        .actions { display: flex; gap: 10px; }
+        .btn-circle { width: 42px; height: 42px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: 0.2s; }
+        .btn-check { background: #dcfce7; color: #15803d; }
+        .btn-check:hover { background: var(--success); color: #fff; }
+        .btn-trash { background: #fee2e2; color: #b91c1c; }
+        .btn-trash:hover { background: var(--danger); color: #fff; }
 
-        .hidden { display: none; }
+        /* --- FORMULÁRIO --- */
+        .input-box { margin-bottom: 15px; }
+        .input-box label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+        input, select { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.95rem; background: #f8fafc; }
+        .btn-save { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-save:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(79, 70, 229, 0.3); }
+
     </style>
 </head>
 <body>
+
     <nav>
-        <div class="nav-header"><span>📚</span> EstudoFlow</div>
-        <div class="nav-menu">
-            <div class="nav-item active"><span>🏠</span> Dashboard</div>
-            <div class="nav-item"><span>📊</span> Relatórios</div>
-            <div class="nav-item"><span>📅</span> Calendário</div>
-            <div class="nav-item"><span>⚙️</span> Configurações</div>
+        <div class="logo">🚀 <span>EstudoFlow</span></div>
+        
+        <div class="nav-group">
+            <span class="nav-label">Menu Principal</span>
+            <a href="#" class="nav-item active">🏠 Dashboard</a>
+            <a href="#" class="nav-item">📊 Relatórios</a>
+            <a href="#" class="nav-item">📅 Calendário</a>
         </div>
-        <a href="/" class="nav-item" style="margin-top: auto; opacity: 0.5;"><span>🚪</span> Sair</a>
+
+        <div class="nav-group">
+            <span class="nav-label">Personalização</span>
+            <a href="#" class="nav-item">📚 Matérias</a>
+            <a href="#" class="nav-item">⚙️ Configurações</a>
+        </div>
+
+        <a href="/" class="nav-item" style="margin-top: auto;">🚪 Sair da Conta</a>
     </nav>
 
     <main>
-        <div class="header-section">
+        <div class="header">
             <div>
-                <h1 style="font-size: 1.8rem; font-weight: 800;">Bem-vindo de volta!</h1>
-                <p style="color: var(--text-muted);">Você tem <span id="pendentes-txt">0</span> revisões para hoje.</p>
+                <h1>Meu Painel de Estudos</h1>
+                <p style="color: var(--text-muted)">Bem-vindo de volta! Organize suas revisões hoje.</p>
             </div>
         </div>
 
         <div class="dashboard-grid">
-            <div>
-                <div class="filter-bar" id="filtros-container">
-                    <button class="filter-btn active" onclick="filtrar('Todas')">Todas</button>
+            <div class="main-column">
+                <div class="filter-section" id="filtro-materias">
+                    <button class="filter-chip active" onclick="filtrar('Todas')">Todas</button>
                     </div>
 
                 <div id="lista-revisoes">
@@ -116,119 +127,116 @@
             </div>
 
             <div class="side-column">
-                <div class="card" style="margin-bottom: 24px;">
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <span class="stat-val" id="count-pendente">0</span>
-                            <span class="stat-label">Pendentes</span>
+                <div class="card" style="margin-bottom: 25px;">
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-pendente">0</span>
+                            <span class="stat-desc">Pendentes</span>
                         </div>
-                        <div class="stat-box">
-                            <span class="stat-val" id="count-concluido" style="color: var(--success)">0</span>
-                            <span class="stat-label">Concluídas</span>
+                        <div class="stat-card" style="background: #ecfdf5;">
+                            <span class="stat-num" id="stat-concluido" style="color: var(--success);">0</span>
+                            <span class="stat-desc">Feitas</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-title">📝 Nova Revisão</div>
-                    <div class="form-group">
+                    <div class="card-title">➕ Nova Revisão</div>
+                    <div class="input-box">
                         <label>Matéria</label>
-                        <input type="text" id="materia" placeholder="Ex: Direito Penal">
+                        <input type="text" id="materia" placeholder="Ex: Direito Civil">
                     </div>
-                    <div class="form-group">
-                        <label>Assunto</label>
-                        <input type="text" id="subtopico" placeholder="Ex: Teoria do Crime">
+                    <div class="input-box">
+                        <label>Assunto / Tópico</label>
+                        <input type="text" id="subtopico" placeholder="Ex: Atos Administrativos">
                     </div>
-                    <div class="form-group">
+                    <div class="input-box">
                         <label>Ciclo de Revisão</label>
                         <select id="prazo">
-                            <option value="1">24 Horas</option>
+                            <option value="1">Amanhã (24h)</option>
                             <option value="7">7 Dias</option>
                             <option value="15">15 Dias</option>
                             <option value="30">30 Dias</option>
                         </select>
                     </div>
-                    <button class="btn-primary" onclick="salvarNoBanco()">Agendar Revisão</button>
+                    <button class="btn-save" onclick="salvarNoBanco()">Agendar Agora</button>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        let todasRevisoes = [];
+        let dbDados = [];
 
         async function carregarDados() {
             const res = await fetch('/api/estudos');
-            todasRevisoes = await res.json();
-            atualizarInterface(todasRevisoes);
+            dbDados = await res.json();
+            renderizar(dbDados);
             atualizarFiltros();
         }
 
-        function atualizarInterface(dados) {
+        function renderizar(lista) {
             const container = document.getElementById('lista-revisoes');
             container.innerHTML = '';
             
-            let pendentes = 0;
-            let concluidos = 0;
+            let p = 0; let c = 0;
 
-            dados.forEach(d => {
-                if (d.feito) {
-                    concluidos++;
-                } else {
-                    pendentes++;
+            lista.forEach(item => {
+                if (item.feito) { c++; } 
+                else {
+                    p++;
                     container.innerHTML += `
-                        <div class="revisao-item">
+                        <div class="rev-card">
                             <div>
-                                <span class="subject-tag">${d.materia}</span>
-                                <span class="topic-name">${d.subtopico}</span>
-                                <div class="date-info">⏳ Revisar em: <strong>${d.data}</strong></div>
+                                <span class="subject-badge">${item.materia}</span>
+                                <span class="topic-title">${item.subtopico}</span>
+                                <div class="date-tag">📅 Revisar em: <strong>${item.data}</strong></div>
                             </div>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn-action btn-check" onclick="concluir(${d.id})">✓</button>
-                                <button class="btn-action btn-delete" onclick="excluir(${d.id})">🗑️</button>
+                            <div class="actions">
+                                <button class="btn-circle btn-check" onclick="concluir(${item.id})">✓</button>
+                                <button class="btn-circle btn-trash" onclick="excluir(${item.id})">🗑️</button>
                             </div>
                         </div>`;
                 }
             });
 
-            document.getElementById('count-pendente').innerText = pendentes;
-            document.getElementById('pendentes-txt').innerText = pendentes;
-            document.getElementById('count-concluido').innerText = concluidos;
+            document.getElementById('stat-pendente').innerText = p;
+            document.getElementById('stat-concluido').innerText = c;
         }
 
         function atualizarFiltros() {
-            const materias = ['Todas', ...new Set(todasRevisoes.map(r => r.materia))];
-            const container = document.getElementById('filtros-container');
-            container.innerHTML = '';
+            const materias = ['Todas', ...new Set(dbDados.map(r => r.materia))];
+            const cont = document.getElementById('filtro-materias');
+            cont.innerHTML = '';
             materias.forEach(m => {
-                container.innerHTML += `<button class="filter-btn" onclick="filtrar('${m}')">${m}</button>`;
+                const active = m === 'Todas' ? 'active' : '';
+                cont.innerHTML += `<button class="filter-chip ${active}" onclick="filtrar('${m}', this)">${m}</button>`;
             });
         }
 
-        function filtrar(materia) {
-            if (materia === 'Todas') {
-                atualizarInterface(todasRevisoes);
-            } else {
-                const filtradas = todasRevisoes.filter(r => r.materia === materia);
-                atualizarInterface(filtradas);
-            }
+        function filtrar(materia, btn) {
+            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            if (materia === 'Todas') renderizar(dbDados);
+            else renderizar(dbDados.filter(r => r.materia === materia));
         }
 
         async function salvarNoBanco() {
-            const mat = document.getElementById('materia').value;
-            const sub = document.getElementById('subtopico').value;
-            const dias = parseInt(document.getElementById('prazo').value);
+            const m = document.getElementById('materia').value;
+            const s = document.getElementById('subtopico').value;
+            const d = parseInt(document.getElementById('prazo').value);
             
-            if(!mat || !sub) return;
+            if(!m || !s) return alert("Por favor, preencha os campos.");
 
-            const dataAlvo = new Date();
-            dataAlvo.setDate(dataAlvo.getDate() + dias);
-            const dataStr = dataAlvo.toLocaleDateString('pt-BR');
+            const data = new Date();
+            data.setDate(data.getDate() + d);
+            const dataStr = data.toLocaleDateString('pt-BR');
 
             await fetch('/api/estudos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ materia: mat, subtopico: sub, data: dataStr })
+                body: JSON.stringify({ materia: m, subtopico: s, data: dataStr })
             });
 
             document.getElementById('materia').value = '';
@@ -246,7 +254,7 @@
         }
 
         async function excluir(id) {
-            if(confirm("Excluir definitivamente?")) {
+            if(confirm("Deseja apagar esta revisão?")) {
                 await fetch(`/api/estudos/${id}`, { method: 'DELETE' });
                 carregarDados();
             }
