@@ -3,95 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Revisão</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Sistema de Revisão V13+</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4f46e5; --success: #10b981; --danger: #ef4444; --bg: #f3f4f6; --card: #ffffff; --text: #1e293b; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; min-height: 100vh; }
-        nav { width: 250px; background: #1e293b; color: white; padding: 20px; position: fixed; height: 100%; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
-        main { margin-left: 250px; padding: 40px; width: 100%; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 700px; }
-        .nav-item { padding: 12px; cursor: pointer; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; background: #334155; text-align: center; }
-        .nav-item.active { background: var(--primary); font-weight: bold; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .form-group { margin-bottom: 20px; }
-        .input-group { display: flex; gap: 10px; }
-        input, select { flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; outline: none; }
-        .main-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
+        :root { --primary: #4f46e5; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --success: #10b981; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; }
         
-        /* Ícones V13 Estilizados */
-        .item-revisao { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 10px; background: #fff; }
-        .btn-group { display: flex; gap: 8px; }
-        .btn-icon { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .btn-edit { background: #fef3c7; color: #92400e; }
-        .btn-delete { background: #fee2e2; color: #991b1b; }
-        .btn-check { background: var(--success); color: white; border-radius: 50%; width: 35px; height: 35px; }
+        /* Sidebar Estilo Ponto2 */
+        nav { width: 260px; background: #1e293b; color: white; height: 100vh; position: fixed; padding: 20px; box-sizing: border-box; }
+        .nav-logo { font-weight: 800; font-size: 1.2rem; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .nav-item { padding: 14px; cursor: pointer; border-radius: 10px; margin-bottom: 8px; transition: 0.3s; display: flex; align-items: center; gap: 12px; opacity: 0.7; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); opacity: 1; }
+        .nav-item.active { border-left: 4px solid var(--primary); }
+
+        main { margin-left: 260px; padding: 40px; width: 100%; max-width: 1000px; }
+        .header { margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+        /* Cards e Inputs */
+        .card { background: var(--card); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: #64748b; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         
-        .data-revisao { font-size: 0.75rem; margin-top: 4px; display: block; font-weight: 600; }
-        .atrasado { color: var(--danger); }
-        .hidden { display: none; }
+        .btn-add { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-add:hover { background: #4338ca; }
+
+        /* Lista de Revisões V13 */
+        .item-revisao { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: white; border-radius: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; }
+        .item-info strong { display: block; font-size: 1rem; }
+        .item-info span { font-size: 0.85rem; color: #64748b; }
+        .tag-data { display: inline-block; padding: 4px 8px; background: #e0e7ff; color: #4338ca; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-top: 5px; }
+        
+        .actions { display: flex; gap: 10px; }
+        .btn-icon { border: none; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: 0.2s; }
+        .btn-check { background: #dcfce7; color: #166534; }
+        .btn-del { background: #fee2e2; color: #991b1b; }
+
+        /* Relatório */
+        .stats-container { display: flex; gap: 20px; margin-top: 20px; }
+        .stat-card { flex: 1; background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-number { display: block; font-size: 1.8rem; font-weight: 800; color: var(--primary); }
     </style>
 </head>
 <body>
     <nav>
-        <h2 style="font-size: 1rem; opacity: 0.7;">Sistema de Revisão</h2>
-        <div class="nav-item active" onclick="location.href='/dashboard'">Painel</div>
+        <div class="nav-logo">📚 EstudoFlow</div>
+        <div class="nav-item active">Dashboard</div>
         <div class="nav-item" onclick="location.href='/'">Sair</div>
     </nav>
+
     <main>
-        <div class="container">
+        <div class="header">
+            <h1>Seu Painel de Revisão</h1>
+            <p>Acompanhe e gerencie seus ciclos de estudo.</p>
+        </div>
+
+        <div class="grid">
             <div class="card">
-                <h3>Novo Estudo</h3>
-                <div class="form-group">
-                    <input type="text" id="materia" placeholder="Matéria">
+                <h3>Agendar Novo Estudo</h3>
+                <div class="input-group">
+                    <label>Matéria</label>
+                    <input type="text" id="materia" placeholder="Ex: Direito Constitucional">
                 </div>
-                <div class="form-group">
-                    <input type="text" id="subtopico" placeholder="Subtópico">
+                <div class="input-group">
+                    <label>Subtópico</label>
+                    <input type="text" id="subtopico" placeholder="Ex: Direitos Fundamentais">
                 </div>
-                <div class="form-group">
+                <div class="input-group">
+                    <label>Prazo de Revisão</label>
                     <select id="prazo">
-                        <option value="1">Amanhã</option>
-                        <option value="7">7 dias</option>
-                        <option value="30">30 dias</option>
+                        <option value="1">24 Horas (Amanhã)</option>
+                        <option value="7">7 Dias</option>
+                        <option value="15">15 Dias</option>
+                        <option value="30">30 Dias</option>
                     </select>
                 </div>
-                <button class="main-btn" onclick="salvarNoBanco()">Agendar Revisão</button>
+                <button class="btn-add" onclick="salvarNoBanco()">Agendar Revisão</button>
             </div>
 
-            <div id="lista-revisoes"></div>
+            <div>
+                <div id="stats" class="stats-container" style="margin-top: 0; margin-bottom: 25px;">
+                    <div class="stat-card">
+                        <span class="stat-number" id="count-pendente">0</span>
+                        <small>Pendentes</small>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="count-concluido" style="color: var(--success)">0</span>
+                        <small>Concluídos</small>
+                    </div>
+                </div>
+
+                <div id="lista-revisoes">
+                    </div>
+            </div>
         </div>
     </main>
 
     <script>
-        // Ao carregar a página, busca os dados do servidor Python
         async function carregarDados() {
             const res = await fetch('/api/estudos');
             const dados = await res.json();
+            
             const container = document.getElementById('lista-revisoes');
-            container.innerHTML = '';
+            container.innerHTML = '<h3>Suas Revisões</h3>';
+            
+            let pendentes = 0;
+            let concluidos = 0;
 
             dados.forEach(d => {
-                if(!d.feito) {
+                if (d.feito) {
+                    concluidos++;
+                } else {
+                    pendentes++;
                     container.innerHTML += `
                         <div class="item-revisao">
-                            <div>
-                                <strong>${d.materia}</strong><br><small>${d.subtopico}</small>
-                                <span class="data-revisao">Revisar em: ${d.data}</span>
+                            <div class="item-info">
+                                <strong>${d.materia}</strong>
+                                <span>${d.subtopico}</span><br>
+                                <span class="tag-data">📅 ${d.data}</span>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn-icon btn-delete" onclick="excluir(${d.id})">🗑️</button>
-                                <button class="btn-icon btn-check" onclick="concluir(${d.id})">✓</button>
+                            <div class="actions">
+                                <button class="btn-icon btn-check" title="Concluir" onclick="concluir(${d.id})">✓</button>
+                                <button class="btn-icon btn-del" title="Excluir" onclick="excluir(${d.id})">🗑️</button>
                             </div>
                         </div>`;
                 }
             });
+
+            document.getElementById('count-pendente').innerText = pendentes;
+            document.getElementById('count-concluido').innerText = concluidos;
         }
 
         async function salvarNoBanco() {
-            const materia = document.getElementById('materia').value;
-            const subtopico = document.getElementById('subtopico').value;
+            const mat = document.getElementById('materia').value;
+            const sub = document.getElementById('subtopico').value;
             const dias = parseInt(document.getElementById('prazo').value);
             
+            if(!mat || !sub) return alert("Preencha tudo!");
+
             const dataAlvo = new Date();
             dataAlvo.setDate(dataAlvo.getDate() + dias);
             const dataStr = dataAlvo.toLocaleDateString('pt-BR');
@@ -99,10 +149,12 @@
             await fetch('/api/estudos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ materia, subtopico, data: dataStr })
+                body: JSON.stringify({ materia: mat, subtopico: sub, data: dataStr })
             });
-            
-            location.reload();
+
+            document.getElementById('materia').value = '';
+            document.getElementById('subtopico').value = '';
+            carregarDados();
         }
 
         async function concluir(id) {
@@ -115,7 +167,7 @@
         }
 
         async function excluir(id) {
-            if(confirm("Excluir revisão?")) {
+            if(confirm("Deseja apagar esta revisão?")) {
                 await fetch(`/api/estudos/${id}`, { method: 'DELETE' });
                 carregarDados();
             }
